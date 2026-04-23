@@ -1,96 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outer Worlds 2 Item Directory</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; padding: 20px; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); 
-            color: #fff; min-height: 100vh;
-        }
-        .header { text-align: center; margin-bottom: 30px; }
-        h1 { 
-            font-size: 2.5em; margin: 0; background: linear-gradient(45deg, #00ff88, #00ccff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            text-shadow: 0 0 20px rgba(0,255,136,0.5);
-        }
-        .subtitle { color: #ccc; margin-top: 10px; font-size: 1.1em; }
-        
-        #search { 
-            width: 100%; padding: 18px 20px; margin-bottom: 25px; font-size: 1.3em; 
-            background: rgba(20,20,20,0.9); color: #fff; border: 3px solid #00ff88; 
-            border-radius: 12px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,255,136,0.2);
-        }
-        #search:focus { 
-            outline: none; border-color: #00ccff; box-shadow: 0 0 25px rgba(0,204,255,0.5); 
-            transform: scale(1.02);
-        }
-        #search::placeholder { color: #888; }
-        
-        #stats { 
-            text-align: center; margin-bottom: 20px; color: #00ff88; 
-            font-weight: bold; font-size: 1.2em; padding: 10px; 
-            background: rgba(0,255,136,0.1); border-radius: 8px;
-        }
-        
-        .category { 
-            margin-bottom: 35px; animation: fadeIn 0.5s ease-in; 
-        }
-        .category h2 { 
-            color: #00ff88; border-bottom: 3px solid #00ff88; 
-            padding-bottom: 10px; margin-bottom: 15px; font-size: 1.6em;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .category-count { background: #00ff88; color: #000; padding: 4px 10px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
-        
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { 
-            padding: 14px 18px; margin: 8px 0; background: rgba(51,51,51,0.8); 
-            cursor: pointer; border-radius: 10px; transition: all 0.3s; 
-            border-left: 5px solid #666; position: relative; overflow: hidden;
-        }
-        li:hover { 
-            background: linear-gradient(90deg, #102F43, #00ccff); 
-            border-left-color: #fff; transform: translateX(8px) scale(1.02); 
-            box-shadow: 0 8px 25px rgba(0,255,136,0.4);
-        }
-        li::before {
-            content: '📦'; position: absolute; right: 15px; opacity: 0; transition: 0.3s;
-        }
-        li:hover::before { opacity: 1; transform: scale(1.2); }
-        
-        li.ammo { 
-            border-left-color: #ffaa00; background: rgba(255,170,0,0.15);
-        }
-        li.ammo:hover { 
-            background: linear-gradient(90deg, #ffaa00, #ff8800); 
-            border-left-color: #fff;
-        }
-        li.ammo::before { content: '🔥'; }
-        
-        .no-results { 
-            text-align: center; color: #888; font-size: 1.3em; padding: 60px 20px; 
-            background: rgba(100,100,100,0.2); border-radius: 15px; border: 2px dashed #666;
-        }
-        .no-results i { display: block; font-size: 4em; margin-bottom: 20px; opacity: 0.3; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { body { padding: 10px; } h1 { font-size: 2em; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outer Worlds 2 // Item ID Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+ --bg:#06080c;--bg-2:#0a0f16;--panel:#0e141d;--panel-2:#111824;
+ --line:#1a2433;--line-2:#223044;--text:#d6e2ef;--dim:#7f8ea2;--mute:#50607a;
+ --accent:#00e5a0;--accent-dim:#00a37a;--accent-glow:rgba(0,229,160,.45);
+ --red:#ff4d5c;--blue:#4d9fff;--yellow:#ffd24d;--purple:#b47dff;--orange:#ff9d4d;--cyan:#4de5e5;
+}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Rajdhani',system-ui,sans-serif}
+body{
+ min-height:100vh;
+ background:
+  radial-gradient(1200px 600px at 10% -10%, rgba(0,229,160,.06), transparent 60%),
+  radial-gradient(900px 500px at 110% 10%, rgba(77,159,255,.05), transparent 60%),
+  linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+ letter-spacing:.3px;
+}
+.scanlines{
+ pointer-events:none;position:fixed;inset:0;z-index:9999;
+ background:repeating-linear-gradient(to bottom, rgba(255,255,255,.015) 0 1px, transparent 1px 3px);
+ mix-blend-mode:overlay;
+}
+.mono{font-family:'Share Tech Mono','Consolas',monospace;letter-spacing:.5px}
+
+/* scrollbar */
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:#070b11}
+*::-webkit-scrollbar-thumb{background:linear-gradient(var(--line-2),var(--line));border-radius:6px;border:2px solid #070b11}
+*::-webkit-scrollbar-thumb:hover{background:var(--accent-dim)}
+
+/* header */
+.site-header{padding:28px 24px 10px;max-width:1100px;margin:0 auto;text-align:center}
+.site-header h1{
+ font-size:clamp(1.6rem,3.2vw,2.4rem);margin:0;font-weight:700;letter-spacing:2px;
+ color:var(--text);text-transform:uppercase;
+ text-shadow:0 0 16px rgba(0,229,160,.25);
+}
+.site-header h1 .slash{color:var(--accent);margin:0 .4em;font-weight:500}
+.site-header .tagline{
+ margin:6px 0 0;color:var(--dim);font-family:'Share Tech Mono',monospace;
+ font-size:.82rem;letter-spacing:2px;text-transform:uppercase;
+}
+.site-header .tagline b{color:var(--accent);font-weight:400}
+
+/* toolbar */
+.toolbar{
+ position:sticky;top:0;z-index:50;
+ background:linear-gradient(180deg, rgba(6,8,12,.96), rgba(6,8,12,.86) 70%, rgba(6,8,12,0));
+ backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+ padding:14px 24px 18px;
+}
+.toolbar-inner{max-width:1100px;margin:0 auto}
+.search-wrap{position:relative}
+#search{
+ width:100%;padding:16px 18px 16px 48px;
+ background:var(--panel);color:var(--text);
+ border:1px solid var(--line-2);border-radius:4px;
+ font-family:'Share Tech Mono',monospace;font-size:1rem;letter-spacing:2px;
+ text-transform:uppercase;outline:none;
+ transition:border-color .2s, box-shadow .2s, background .2s;
+}
+#search::placeholder{color:var(--mute);letter-spacing:2px}
+#search:focus{
+ border-color:var(--accent);
+ background:#0b1119;
+ box-shadow:0 0 0 1px var(--accent), 0 0 22px var(--accent-glow);
+}
+.search-wrap::before{
+ content:">";position:absolute;left:18px;top:50%;transform:translateY(-50%);
+ color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:1.1rem;
+}
+.search-hint{
+ position:absolute;right:14px;top:50%;transform:translateY(-50%);
+ color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:.7rem;
+ letter-spacing:2px;padding:4px 8px;border:1px solid var(--accent);border-radius:2px;
+ opacity:.6;
+}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.filter-btn{
+ background:var(--panel);color:var(--dim);
+ border:1px solid var(--line-2);border-radius:2px;
+ padding:7px 14px;font-family:'Share Tech Mono',monospace;font-size:.78rem;
+ letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+ transition:color .15s, border-color .15s, background .15s, box-shadow .15s;
+}
+.filter-btn:hover{color:var(--text);border-color:var(--line-2)}
+.filter-btn.active{color:var(--bg);background:var(--accent);border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+.filter-btn .count{opacity:.7;margin-left:6px;font-size:.72rem}
+.filter-btn.active .count{opacity:.85}
+
+/* status line */
+.status{
+ max-width:1100px;margin:0 auto;padding:6px 24px 14px;
+ font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--dim);
+ letter-spacing:2px;text-transform:uppercase;
+}
+.status b{color:var(--accent);font-weight:400}
+
+/* results */
+.results{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+.group{margin:22px 0 4px}
+.group-head{
+ display:flex;align-items:center;gap:12px;
+ padding:10px 0 8px;margin-bottom:6px;
+ border-bottom:1px solid var(--line);
+}
+.group-head .dot{
+ width:10px;height:10px;border-radius:50%;
+ box-shadow:0 0 10px currentColor;
+}
+.group-head .label{
+ font-family:'Share Tech Mono',monospace;font-size:.85rem;letter-spacing:3px;
+ text-transform:uppercase;color:var(--text);
+}
+.group-head .sub{color:var(--dim)}
+.group-head .n{
+ margin-left:auto;color:var(--dim);
+ font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;
+}
+
+.row{
+ display:flex;align-items:center;gap:14px;
+ padding:10px 14px;margin:3px 0;
+ background:var(--panel);
+ border-left:3px solid transparent;
+ border-radius:2px;cursor:pointer;
+ transition:background .15s, border-color .15s, transform .15s, box-shadow .15s;
+}
+.row:hover{
+ background:var(--panel-2);
+ border-left-color:var(--accent);
+ transform:translateX(3px);
+ box-shadow:0 4px 18px rgba(0,0,0,.4), -3px 0 14px var(--accent-glow);
+}
+.row .rdot{
+ width:7px;height:7px;border-radius:50%;flex:0 0 auto;
+ box-shadow:0 0 8px currentColor;opacity:.85;
+}
+.row .rname{flex:1 1 auto;font-weight:500;font-size:1.02rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .rmeta{
+ font-family:'Share Tech Mono',monospace;color:var(--mute);font-size:.7rem;
+ letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;
+}
+.row .rtag{
+ font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:2px;
+ padding:2px 6px;border:1px solid var(--line-2);border-radius:2px;color:var(--dim);
+ text-transform:uppercase;white-space:nowrap;
+}
+.row .rtag.unique{color:var(--yellow);border-color:rgba(255,210,77,.35)}
+.row .rtag.modded{color:var(--blue);border-color:rgba(77,159,255,.35)}
+.row .rtag.rift{color:var(--purple);border-color:rgba(180,125,255,.35)}
+.row .rtag.base{color:var(--mute)}
+.row .rtag.boss{color:var(--red);border-color:rgba(255,77,92,.35)}
+
+/* category colors */
+.c-weapons{color:var(--red)}
+.c-armor{color:var(--blue)}
+.c-items{color:var(--yellow)}
+.c-pets{color:var(--purple)}
+.c-traits{color:var(--orange)}
+.c-throwables{color:var(--cyan)}
+
+.empty{
+ text-align:center;padding:80px 20px;color:var(--dim);
+ font-family:'Share Tech Mono',monospace;letter-spacing:3px;
+}
+.empty .glyph{font-size:2.4rem;color:var(--accent);margin-bottom:10px}
+
+/* modal */
+.modal[hidden]{display:none}
+.modal{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:720px){.modal{align-items:center}}
+.modal-backdrop{position:absolute;inset:0;background:rgba(3,5,9,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:fadeIn .2s ease-out}
+.modal-card{
+ position:relative;z-index:1;width:min(640px,100%);
+ background:linear-gradient(180deg, var(--panel-2), var(--panel));
+ border:1px solid var(--line-2);
+ border-top:1px solid var(--accent);
+ box-shadow:0 -8px 50px rgba(0,229,160,.15), 0 20px 60px rgba(0,0,0,.6);
+ padding:26px 26px 22px;
+ border-radius:6px 6px 0 0;
+ animation:slideUp .28s cubic-bezier(.2,.8,.2,1);
+ max-height:92vh;overflow-y:auto;
+}
+@media(min-width:720px){.modal-card{border-radius:6px;animation-name:popIn}}
+.modal-close{
+ position:absolute;top:10px;right:12px;
+ background:none;border:none;color:var(--dim);
+ font-size:1.6rem;cursor:pointer;line-height:1;padding:4px 8px;
+ transition:color .15s;
+}
+.modal-close:hover{color:var(--accent)}
+.modal-cat{
+ font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:3px;
+ text-transform:uppercase;margin-bottom:6px;
+}
+.modal-cat .dot{display:inline-block;width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor;vertical-align:middle;margin-right:8px}
+.modal-card h2{
+ margin:4px 0 18px;font-size:clamp(1.3rem,2.4vw,1.7rem);
+ font-weight:700;letter-spacing:1px;color:var(--text);
+}
+.field{margin-bottom:14px}
+.field label{
+ display:block;font-family:'Share Tech Mono',monospace;font-size:.68rem;
+ letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:4px;
+}
+.copyable{
+ position:relative;
+ background:#070b11;border:1px solid var(--line);
+ padding:10px 12px;border-radius:3px;
+ font-family:'Share Tech Mono',monospace;font-size:.85rem;
+ color:var(--text);word-break:break-all;cursor:pointer;
+ transition:border-color .15s, color .15s, background .15s;
+}
+.copyable:hover{border-color:var(--accent);color:var(--accent)}
+.copyable::after{
+ content:"CLICK TO COPY";position:absolute;top:6px;right:8px;
+ font-size:.6rem;letter-spacing:2px;color:var(--mute);opacity:0;
+ transition:opacity .15s, color .15s;
+}
+.copyable:hover::after{opacity:.8}
+.copyable.copied{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.06)}
+.copyable.copied::after{content:"COPIED";color:var(--accent);opacity:1}
+
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+.meta .chip{
+ font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:2px;
+ text-transform:uppercase;padding:5px 10px;border:1px solid var(--line-2);
+ border-radius:2px;color:var(--dim);
+}
+.meta .chip b{color:var(--text);font-weight:400;margin-left:6px}
+.meta .chip.faction b{color:var(--accent)}
+.meta .chip.variant.unique b{color:var(--yellow)}
+.meta .chip.variant.modded b{color:var(--blue)}
+.meta .chip.variant.rift b{color:var(--purple)}
+.meta .chip.variant.boss b{color:var(--red)}
+
+.copy-btn{
+ width:100%;padding:14px;margin-top:4px;
+ background:var(--accent);color:var(--bg);
+ border:none;border-radius:3px;cursor:pointer;
+ font-family:'Share Tech Mono',monospace;font-size:.9rem;letter-spacing:4px;
+ text-transform:uppercase;font-weight:700;
+ transition:background .15s, box-shadow .15s, transform .1s;
+}
+.copy-btn:hover{background:#00ffb3;box-shadow:0 0 22px var(--accent-glow)}
+.copy-btn:active{transform:translateY(1px)}
+.copy-btn.copied{background:var(--text);color:var(--bg)}
+
+footer.credit{
+ text-align:center;color:var(--mute);font-family:'Share Tech Mono',monospace;
+ font-size:.7rem;letter-spacing:3px;padding:24px 12px 40px;text-transform:uppercase;
+}
+footer.credit a{color:var(--dim);text-decoration:none;border-bottom:1px dotted var(--line-2)}
+footer.credit a:hover{color:var(--accent);border-color:var(--accent)}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn{from{transform:translateY(20px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+@media (max-width:600px){
+ .site-header{padding:18px 16px 4px}
+ .toolbar{padding:10px 16px 14px}
+ .results{padding:0 16px 80px}
+ .row{padding:10px}
+ .row .rmeta{display:none}
+}
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>🛠️ Outer Worlds 2 Item Directory</h1>
-        <p class="subtitle">Search For any Item</p>
-    </div>
-    
-    <input type="text" id="search" placeholder="🔍 Type instantly (rifle, armor, plasma, auntie, rocket, ammo...)">
-    
-    <div id="stats" class="stats">Ready – Type to search (0 items)</div>
-    <div id="results"></div>
+<div class="scanlines"></div>
+<header class="site-header">
+ <h1>OUTER WORLDS 2<span class="slash">//</span>ITEM ID DATABASE</h1>
+ <p class="tagline">Console command blueprint lookup · <b><span id="totalCount">0</span></b> entries indexed</p>
+</header>
+<div class="toolbar">
+ <div class="toolbar-inner">
+  <div class="search-wrap">
+   <input id="search" type="text" autocomplete="off" spellcheck="false" placeholder="search // name, brand, variant, path...">
+   <div class="search-hint">LIVE</div>
+  </div>
+  <div id="filters" class="filters"></div>
+ </div>
+</div>
+<div id="status" class="status"></div>
+<main id="results" class="results" role="list"></main>
+
+<div id="modal" class="modal" hidden aria-hidden="true">
+ <div class="modal-backdrop" data-close></div>
+ <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <button class="modal-close" data-close aria-label="Close">&times;</button>
+  <div class="modal-cat" id="modalCat"></div>
+  <h2 id="modalName"></h2>
+  <div class="field">
+   <label>Blueprint ID</label>
+   <div class="copyable mono" id="modalId" data-copy></div>
+  </div>
+  <div class="field">
+   <label>Asset Path</label>
+   <div class="copyable mono" id="modalPath" data-copy></div>
+  </div>
+  <div class="meta" id="modalMeta"></div>
+  <button class="copy-btn" id="copyMain">Copy Blueprint ID</button>
+ </div>
+</div>
+
+<footer class="credit">Outer Worlds 2 // Console Command Reference · Unofficial Fan Project</footer>
 
     <script>const items = {
   "Items": [
@@ -1893,52 +2116,334 @@
     "Arkansas/Content/Blueprints/Armor/Undersuits/Protectorate/ProtectorateUndersuit_Body"
   ]
 };</script>
-    <script>
-    function displayItems(filteredItems = items) {
-      const results = document.getElementById('results');
-      const stats = document.getElementById('stats');
-      let total = 0;
-      let html = '';
-      
-      for (const [category, itemList] of Object.entries(filteredItems)) {
-        const count = itemList.length;
-        if (count === 0) continue;
-        total += count;
-        html += `
-          <div class="category">
-            <h2>${category} <span class="category-count">${count}</span></h2>
-            <ul>${itemList.map(item => {
-              const basename = item.split('/').pop();
-              const displayPath = item.toLowerCase();
-              return `<li ondblclick="navigator.clipboard.writeText('${basename}')">${displayPath}</li>`;
-            }).join('')}</ul>
-          </div>
-        `;
-      }
-      
-      results.innerHTML = html || '<div class="no-results"><i>🔍</i>No results found</div>';
-      stats.textContent = `Showing ${total} items`;
-    }
-    
-    // Search filter
-    document.getElementById('search').addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      const filtered = {};
-      
-      for (const [category, itemList] of Object.entries(items)) {
-        const matches = itemList.filter(item => 
-          category.toLowerCase().includes(query) || 
-          item.toLowerCase().includes(query)
-        );
-        if (matches.length) filtered[category] = matches;
-      }
-      
-      displayItems(filtered);
-    });
-    
-    // Load initial items
-    displayItems();
-    </script>
+<script>
+(function(){
+ "use strict";
 
+ const CATEGORIES = [
+  {key:"all",      label:"ALL"},
+  {key:"weapons",  label:"WEAPONS"},
+  {key:"armor",    label:"ARMOR"},
+  {key:"items",    label:"ITEMS"},
+  {key:"pets",     label:"PETS"},
+  {key:"traits",   label:"TRAITS"},
+  {key:"throwables",label:"THROWABLES"},
+ ];
+
+ const FACTIONS = [
+  "AuntiesChoice","Protectorate","SubRosa","Scrappers","ChosenFleet",
+  "EarthDirectorate","OrderOfTheAscendant","GloriousDawn","Firefly",
+  "Pinnacle","Prestige","Ascendant","AuntieCleoPals","MatriarchsOwn",
+  "Moderation","Fizzo","Spacers"
+ ];
+ const VARIANTS = ["Modded","Unique","Rift","BASE","BOSS"];
+
+ function prettifyName(seg){
+  return seg.replace(/_/g," ").replace(/\s+/g," ").trim();
+ }
+ function prettifySub(s){
+  return s.replace(/([a-z])([A-Z])/g,"$1 $2");
+ }
+
+ function classifyPath(topKey, path){
+  const parts = path.split("/");
+  const last = parts[parts.length-1];
+  let cat = "items", sub = "Misc";
+  switch(topKey){
+   case "Weap Weapons": {
+    cat = "weapons";
+    let s = parts[4] || "Unknown";
+    if(s.indexOf("Class_")===0) s = s.slice(6);
+    sub = s;
+    break;
+   }
+   case "Armor": {
+    cat = "armor";
+    sub = parts[4] || "Unknown";
+    break;
+   }
+   case "Items": {
+    cat = "items";
+    sub = parts[4] || "Misc";
+    break;
+   }
+   case "Pets": {
+    cat = "pets";
+    sub = "Pets";
+    break;
+   }
+   case "Traits": {
+    cat = "traits";
+    sub = "Traits";
+    break;
+   }
+   case "Grenade Explosive": {
+    cat = "throwables";
+    sub = "Grenade";
+    break;
+   }
+  }
+
+  let faction = "";
+  for(let i=0;i<FACTIONS.length;i++){
+   if(parts.indexOf(FACTIONS[i])!==-1){ faction = FACTIONS[i]; break; }
+  }
+  let variant = "";
+  for(let i=0;i<VARIANTS.length;i++){
+   const v = VARIANTS[i];
+   if(parts.indexOf(v)!==-1 || last.indexOf("_"+v+"_")!==-1 || last.endsWith("_"+v) || last.endsWith(v)){
+    variant = v; break;
+   }
+  }
+
+  return {cat, sub, rawId:last, display:prettifyName(last), faction, variant};
+ }
+
+ // Build flat entry list
+ const ENTRIES = [];
+ const TOTALS = {all:0,weapons:0,armor:0,items:0,pets:0,traits:0,throwables:0};
+ const topKeys = Object.keys(items);
+ for(let i=0;i<topKeys.length;i++){
+  const k = topKeys[i];
+  const arr = items[k];
+  if(!Array.isArray(arr)) continue;
+  for(let j=0;j<arr.length;j++){
+   const p = arr[j];
+   if(typeof p !== "string" || !p) continue;
+   const info = classifyPath(k, p);
+   const searchText = (info.display+" "+info.rawId+" "+info.sub+" "+info.faction+" "+info.variant+" "+p).toLowerCase();
+   ENTRIES.push({
+    path:p, cat:info.cat, sub:info.sub,
+    rawId:info.rawId, display:info.display,
+    faction:info.faction, variant:info.variant,
+    searchText
+   });
+   TOTALS.all++;
+   TOTALS[info.cat] = (TOTALS[info.cat]||0)+1;
+  }
+ }
+
+ // render category filter buttons
+ const filtersEl = document.getElementById("filters");
+ filtersEl.innerHTML = CATEGORIES.map(function(c){
+  const n = TOTALS[c.key]||0;
+  return '<button class="filter-btn'+(c.key==="all"?" active":"")+'" data-cat="'+c.key+'">'
+   + c.label + '<span class="count">'+n+'</span></button>';
+ }).join("");
+
+ document.getElementById("totalCount").textContent = TOTALS.all.toLocaleString();
+
+ const searchEl = document.getElementById("search");
+ const resultsEl = document.getElementById("results");
+ const statusEl = document.getElementById("status");
+
+ let activeCat = "all";
+ let query = "";
+
+ function render(){
+  const q = query.trim().toLowerCase();
+  const tokens = q ? q.split(/\s+/).filter(Boolean) : [];
+  const filtered = [];
+  for(let i=0;i<ENTRIES.length;i++){
+   const e = ENTRIES[i];
+   if(activeCat !== "all" && e.cat !== activeCat) continue;
+   if(tokens.length){
+    let ok = true;
+    for(let t=0;t<tokens.length;t++){
+     if(e.searchText.indexOf(tokens[t]) === -1){ ok=false; break; }
+    }
+    if(!ok) continue;
+   }
+   filtered.push(e);
+  }
+
+  // group
+  const groups = {};
+  const order = [];
+  for(let i=0;i<filtered.length;i++){
+   const e = filtered[i];
+   const key = e.cat+"|"+e.sub;
+   if(!groups[key]){ groups[key] = []; order.push(key); }
+   groups[key].push(e);
+  }
+
+  const catOrder = {weapons:0,armor:1,items:2,throwables:3,pets:4,traits:5};
+  order.sort(function(a,b){
+   const ea = groups[a][0], eb = groups[b][0];
+   const co = (catOrder[ea.cat]||99) - (catOrder[eb.cat]||99);
+   if(co) return co;
+   return ea.sub.localeCompare(eb.sub);
+  });
+
+  let html = "";
+  if(!filtered.length){
+   html = '<div class="empty"><div class="glyph mono">// NO MATCH //</div>'
+     + '<div>No entries for current filter.</div></div>';
+  } else {
+   for(let i=0;i<order.length;i++){
+    const key = order[i];
+    const list = groups[key];
+    list.sort(function(a,b){ return a.display.localeCompare(b.display); });
+    const e0 = list[0];
+    const catClass = "c-"+e0.cat;
+    const catLabel = e0.cat.toUpperCase();
+    const subLabel = prettifySub(e0.sub).toUpperCase();
+    html += '<section class="group">'
+      + '<div class="group-head">'
+      +  '<span class="dot '+catClass+'"></span>'
+      +  '<span class="label '+catClass+'">'+catLabel+'</span>'
+      +  '<span class="label sub">&mdash; '+subLabel+'</span>'
+      +  '<span class="n">'+list.length+' ENTRIES</span>'
+      + '</div>';
+    for(let j=0;j<list.length;j++){
+     const e = list[j];
+     const vTag = e.variant ? '<span class="rtag '+e.variant.toLowerCase()+'">'+e.variant+'</span>' : '';
+     const fTag = e.faction ? '<span class="rmeta">'+prettifySub(e.faction).toUpperCase()+'</span>' : '';
+     html += '<div class="row" data-idx="'+ENTRIES.indexOf(e)+'" role="listitem">'
+       + '<span class="rdot '+catClass+'"></span>'
+       + '<span class="rname">'+escapeHtml(e.display)+'</span>'
+       + fTag
+       + vTag
+       + '</div>';
+    }
+    html += '</section>';
+   }
+  }
+  resultsEl.innerHTML = html;
+
+  const n = filtered.length;
+  statusEl.innerHTML = '<b>'+n.toLocaleString()+'</b> '
+    + (n===1?'result':'results')
+    + (q?' for "'+escapeHtml(q)+'"':'')
+    + (activeCat!=="all"?' in '+activeCat.toUpperCase():'');
+ }
+
+ function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,function(c){
+   return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+  });
+ }
+
+ // search input
+ let searchTimer = null;
+ searchEl.addEventListener("input", function(){
+  query = searchEl.value;
+  if(searchTimer) cancelAnimationFrame(searchTimer);
+  searchTimer = requestAnimationFrame(render);
+ });
+
+ // filter buttons
+ filtersEl.addEventListener("click", function(ev){
+  const btn = ev.target.closest(".filter-btn");
+  if(!btn) return;
+  activeCat = btn.getAttribute("data-cat");
+  const all = filtersEl.querySelectorAll(".filter-btn");
+  for(let i=0;i<all.length;i++) all[i].classList.toggle("active", all[i]===btn);
+  render();
+ });
+
+ // row click → modal
+ resultsEl.addEventListener("click", function(ev){
+  const row = ev.target.closest(".row");
+  if(!row) return;
+  const idx = parseInt(row.getAttribute("data-idx"),10);
+  const e = ENTRIES[idx];
+  if(e) openModal(e);
+ });
+
+ // modal
+ const modal = document.getElementById("modal");
+ const modalCat = document.getElementById("modalCat");
+ const modalName = document.getElementById("modalName");
+ const modalId = document.getElementById("modalId");
+ const modalPath = document.getElementById("modalPath");
+ const modalMeta = document.getElementById("modalMeta");
+ const copyMain = document.getElementById("copyMain");
+ let currentEntry = null;
+
+ function openModal(e){
+  currentEntry = e;
+  const catClass = "c-"+e.cat;
+  modalCat.innerHTML = '<span class="dot '+catClass+'"></span>'
+    + '<span class="'+catClass+'">'+e.cat.toUpperCase()+'</span>'
+    + '<span style="color:var(--mute)"> &mdash; '+prettifySub(e.sub).toUpperCase()+'</span>';
+  modalName.textContent = e.display;
+  modalId.textContent = e.rawId;
+  modalPath.textContent = e.path;
+  modalId.classList.remove("copied");
+  modalPath.classList.remove("copied");
+  copyMain.classList.remove("copied");
+  copyMain.textContent = "Copy Blueprint ID";
+
+  let meta = '';
+  if(e.faction) meta += '<span class="chip faction">Faction<b>'+escapeHtml(prettifySub(e.faction))+'</b></span>';
+  if(e.variant) meta += '<span class="chip variant '+e.variant.toLowerCase()+'">Variant<b>'+escapeHtml(e.variant)+'</b></span>';
+  meta += '<span class="chip">Subcategory<b>'+escapeHtml(prettifySub(e.sub))+'</b></span>';
+  modalMeta.innerHTML = meta;
+
+  modal.hidden = false;
+  modal.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+ }
+ function closeModal(){
+  modal.hidden = true;
+  modal.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+  currentEntry = null;
+ }
+ modal.addEventListener("click", function(ev){
+  if(ev.target.matches("[data-close]")) closeModal();
+ });
+ document.addEventListener("keydown", function(ev){
+  if(ev.key === "Escape" && !modal.hidden) closeModal();
+ });
+
+ function flashCopy(el, label){
+  el.classList.add("copied");
+  if(label){
+   const prev = el.textContent;
+   el.textContent = label;
+   setTimeout(function(){ if(el.classList.contains("copied")) el.textContent = prev; }, 1200);
+  }
+  setTimeout(function(){ el.classList.remove("copied"); }, 1400);
+ }
+
+ function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+   return navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
+  }
+  fallbackCopy(text);
+  return Promise.resolve();
+ }
+ function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta);
+ }
+
+ modalId.addEventListener("click", function(){
+  if(!currentEntry) return;
+  copyText(currentEntry.rawId); flashCopy(modalId);
+ });
+ modalPath.addEventListener("click", function(){
+  if(!currentEntry) return;
+  copyText(currentEntry.path); flashCopy(modalPath);
+ });
+ copyMain.addEventListener("click", function(){
+  if(!currentEntry) return;
+  copyText(currentEntry.rawId);
+  copyMain.classList.add("copied");
+  copyMain.textContent = "Copied!";
+  setTimeout(function(){
+   copyMain.classList.remove("copied");
+   copyMain.textContent = "Copy Blueprint ID";
+  }, 1400);
+ });
+
+ render();
+})();
+</script>
 </body>
 </html>
