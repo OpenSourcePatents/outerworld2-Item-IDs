@@ -34,52 +34,70 @@ jobs:
           ls -la itemsgenerated.js || echo "No JS generated"
           head -20 itemsgenerated.js || echo "Empty/missing"
           jq '. | keys | length' itemsgenerated.js 2>/dev/null || echo "No categories"
-      - name: Embed JS → item_directory.html  # Targets ONLY auto-replace script block
+      - name: Embed JS → index.html + item_directory.html  # Targets ONLY auto-replace script blocks
         run: |
-          python3 << EOF
+          python3 << 'EOF'
           import re
           import json
-          
+
           # Read generated JS
           with open('itemsgenerated.js', 'r') as f:
               js_content = f.read().strip()
-          
+
           # Extract object data: const items = {...};
           match = re.search(r'const\s+items\s*=\s*(\{.*?\});?\s*$', js_content, re.DOTALL | re.MULTILINE)
           if not match:
               print("❌ No 'const items = {...};' in itemsgenerated.js")
               exit(1)
-          
+
           data_str = match.group(1)
           data = json.loads(data_str)
           total_items = sum(len(lst) for lst in data.values())
           print(f"✅ Parsed {len(data)} categories, {total_items} items")
-          
-          # Target ONLY the specific script block with comment
-          template_pattern = r'<script>\s*const items\s*=\s*\{[^}]*// Auto-replaced by GitHub Actions from RAR TXT files[^}]*\};\s*</script>'
-          
-          with open('item_directory.html', 'r') as f:
-              html = f.read()
-          
-          if not re.search(template_pattern, html):
-              print("❌ No auto-replace script block found in HTML")
-              exit(1)
-          
-          # Replace with live data (minified for size)
+
+          # Replacement block — same const items = {...}; format, minified
           replacement = f'<script>const items={json.dumps(data, separators=(",",":"))};</script>'
-          
-          html = re.sub(template_pattern, replacement, html, flags=re.DOTALL)
-          
-          with open('item_directory.html', 'w') as f:
-              f.write(html)
-          
-          print("✅ Updated HTML with live items")
+
+          targets = [
+              {
+                  'file': 'item_directory.html',
+                  'pattern': r'<script>\s*const items\s*=\s*\{[^}]*// Auto-replaced by GitHub Actions from RAR TXT files[^}]*\};\s*</script>',
+              },
+              {
+                  'file': 'index.html',
+                  'pattern': r'<script>\s*const items\s*=\s*\{[^}]*// AUTO-REPLACED BY GITHUB ACTIONS[^}]*\};\s*</script>',
+              },
+          ]
+
+          failed = False
+          for t in targets:
+              try:
+                  with open(t['file'], 'r') as f:
+                      html = f.read()
+              except FileNotFoundError:
+                  print(f"⚠️  {t['file']} not found, skipping")
+                  continue
+
+              if not re.search(t['pattern'], html, flags=re.DOTALL):
+                  print(f"❌ No auto-replace script block found in {t['file']}")
+                  failed = True
+                  continue
+
+              html = re.sub(t['pattern'], replacement, html, count=1, flags=re.DOTALL)
+
+              with open(t['file'], 'w') as f:
+                  f.write(html)
+
+              print(f"✅ Updated {t['file']} with live items")
+
+          if failed:
+              exit(1)
           EOF
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Auto-build RAR → index.html (${{ github.sha }})
-          file_pattern: index.html .nojekyll
+          commit_message: Auto-build RAR → index.html + item_directory.html (${{ github.sha }})
+          file_pattern: index.html item_directory.html .nojekyll
       - name: Setup Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
